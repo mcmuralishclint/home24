@@ -30,18 +30,18 @@ func index(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	link := r.PostForm.Get("link")
 
-	getHTMLVersion(link)
+	GetHTMLVersion(link)
 	fmt.Println()
-	getTitle(link)
+	GetTitle(link)
 	fmt.Println()
-	getHeadings(link)
+	GetHeadings(link)
 	fmt.Println()
-	loginForm(link)
+	LoginForm(link)
 	fmt.Println()
-	getLinks(link)
+	GetLinks(link)
 }
 
-func getLinks(link string) error {
+func GetLinks(link string) error {
 	link_count := 0
 	c := colly.NewCollector(
 		colly.MaxDepth(1),
@@ -57,7 +57,7 @@ func getLinks(link string) error {
 	return nil
 }
 
-func getTitle(link string) error {
+func GetTitle(link string) error {
 	if link == "" {
 		return nil
 	}
@@ -66,11 +66,14 @@ func getTitle(link string) error {
 		title := e.Text
 		fmt.Printf("Title: %s\n", title)
 	})
-	c.Visit(link)
+	err := c.Visit(link)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func getHeadings(link string) error {
+func GetHeadings(link string) error {
 	if link == "" {
 		return nil
 	}
@@ -101,7 +104,7 @@ func getHeadings(link string) error {
 	return nil
 }
 
-func loginForm(link string) error {
+func LoginForm(link string) error {
 	if link == "" {
 		return nil
 	}
@@ -125,13 +128,13 @@ func loginForm(link string) error {
 	return nil
 }
 
-func getHTMLVersion(link string) error {
+func GetHTMLVersion(link string) error {
 	if link == "" {
 		return nil
 	}
 	version, err := HTMLVersion.DetectFromURL(link)
 	if err != nil {
-		fmt.Println("HTML Version not found\n")
+		fmt.Println("HTML Version not found")
 	}
 	fmt.Printf("HTML Version: %s\n", version)
 	return nil
