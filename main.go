@@ -57,20 +57,21 @@ func GetLinks(link string) error {
 	return nil
 }
 
-func GetTitle(link string) error {
+func GetTitle(link string) (string, error) {
+	var title string
 	if link == "" {
-		return nil
+		return "", nil
 	}
 	c := colly.NewCollector()
 	c.OnHTML("title", func(e *colly.HTMLElement) {
-		title := e.Text
+		title = e.Text
 		fmt.Printf("Title: %s\n", title)
 	})
 	err := c.Visit(link)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return title, nil
 }
 
 func GetHeadings(link string) error {
