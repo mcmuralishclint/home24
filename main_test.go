@@ -34,3 +34,15 @@ func TestGetHeading(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, headings)
 }
+
+// Return nil Links if empty string is passed in link
+func TestGetLinksEmptyLink(t *testing.T) {
+	err := GetLinks("")
+	assert.Nil(t, err)
+}
+
+// // Return nil if correct link is passed
+func TestGetLinks(t *testing.T) {
+	err := GetLinks("https://www.facebook.com/")
+	assert.Nil(t, err)
+}
