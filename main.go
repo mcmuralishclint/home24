@@ -74,9 +74,9 @@ func GetTitle(link string) (string, error) {
 	return title, nil
 }
 
-func GetHeadings(link string) error {
+func GetHeadings(link string) (map[string]int, error) {
 	if link == "" {
-		return nil
+		return make(map[string]int), nil
 	}
 	c := colly.NewCollector()
 	headings := make(map[string]int)
@@ -100,9 +100,12 @@ func GetHeadings(link string) error {
 	c.OnHTML("h6", func(e *colly.HTMLElement) {
 		headings["h6"] += 1
 	})
-	c.Visit(link)
+	err := c.Visit(link)
+	if err != nil {
+		return make(map[string]int), nil
+	}
 	fmt.Println(headings)
-	return nil
+	return headings, nil
 }
 
 func LoginForm(link string) error {
