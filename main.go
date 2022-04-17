@@ -15,7 +15,7 @@ var tmpl *template.Template
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", index)
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":3001", r)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -31,46 +31,49 @@ func index(w http.ResponseWriter, r *http.Request) {
 	link := r.PostForm.Get("link")
 
 	getHTMLVersion(link)
+	fmt.Println()
 	getTitle(link)
-	getLinks(link)
+	fmt.Println()
 	getHeadings(link)
+	fmt.Println()
 	loginForm(link)
+	fmt.Println()
+	getLinks(link)
 }
 
-func getTitle(link string) {
+func getLinks(link string) error {
+	link_count := 0
+	c := colly.NewCollector(
+		colly.MaxDepth(1),
+		colly.Async(true),
+	)
+
+	// On every a element which has href attribute call callback
+	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
+		link_count += 1
+		fmt.Printf("Link %d: %s\n", link_count, e.Attr("href"))
+	})
+	c.Visit(link)
+	return nil
+}
+
+func getTitle(link string) error {
+	if link == "" {
+		return nil
+	}
 	c := colly.NewCollector()
 	c.OnHTML("title", func(e *colly.HTMLElement) {
 		title := e.Text
 		fmt.Printf("Title: %s\n", title)
 	})
 	c.Visit(link)
+	return nil
 }
 
-func getLinks(link string) {
-	// link_count := 0
-	// accessible_link_count := 0
-	// // Instantiate default collector
-	// c := colly.NewCollector()
-
-	// // On every a element which has href attribute call callback
-	// c.OnHTML("a[href]", func(e *colly.HTMLElement) {
-	// 	new_link := e.Attr("href")
-	// 	// Print link
-	// 	fmt.Printf("Link found: %q -> %s\n", e.Text, new_link)
-	// 	c.Visit(e.Request.AbsoluteURL(new_link))
-	// })
-
-	// c.OnResponse(func(r *colly.Response) {
-	// 	link_count += 1
-	// 	fmt.Println(link_count)
-	// })
-
-	// c.Visit(link)
-
-	// fmt.Printf("Number of links: %d, Number of accessible links: %d\n", link_count, accessible_link_count)
-}
-
-func getHeadings(link string) {
+func getHeadings(link string) error {
+	if link == "" {
+		return nil
+	}
 	c := colly.NewCollector()
 	headings := make(map[string]int)
 
@@ -95,6 +98,7 @@ func getHeadings(link string) {
 	})
 	c.Visit(link)
 	fmt.Println(headings)
+	return nil
 }
 
 func loginForm(link string) error {
@@ -121,10 +125,14 @@ func loginForm(link string) error {
 	return nil
 }
 
-func getHTMLVersion(link string) {
+func getHTMLVersion(link string) error {
+	if link == "" {
+		return nil
+	}
 	version, err := HTMLVersion.DetectFromURL(link)
 	if err != nil {
-		fmt.Println("HTML Version not found")
+		fmt.Println("HTML Version not found\n")
 	}
 	fmt.Printf("HTML Version: %s\n", version)
+	return nil
 }
