@@ -23,12 +23,14 @@ func TestGetTitle(t *testing.T) {
 
 // Return nil Title if empty string is passed in link
 func TestGetHeadingEmptyLink(t *testing.T) {
-	err := GetHeadings("")
+	headings, err := GetHeadings("")
 	assert.Nil(t, err)
+	assert.Equal(t, headings, make(map[string]int))
 }
 
-// Return nil if correct link is passed
+// // Return nil if correct link is passed
 func TestGetHeading(t *testing.T) {
-	err := GetHeadings("https://www.facebook.com/")
+	headings, err := GetHeadings("https://www.facebook.com/")
 	assert.Nil(t, err)
+	assert.NotNil(t, headings)
 }
