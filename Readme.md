@@ -10,3 +10,18 @@
 - Differentiate internal and external links
 - Reuse the colly.NewCollector object efficiently without initializing it for each method
 - Display the response neatly on the UI (Currently the response is logged to the terminal)
+### Setup instructions
+- Option 1
+    ```
+    go mod download
+    go run main.go
+    ```
+    - goto localhost:3001 on a webbrowser
+    - Input the webpage URL and click on submit
+- Option 2
+    ```
+    docker pull mcmuralishclint/docker-home24:latest
+    docker run -p 3001:3001 -d  mcmuralishclint/docker-home24
+    ```
+    - goto localhost:3001 on a webbrowser
+    - Input the webpage URL and click on submit
