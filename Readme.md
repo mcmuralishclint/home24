@@ -10,6 +10,8 @@
 - Differentiate internal and external links
 - Reuse the colly.NewCollector object efficiently without initializing it for each method
 - Display the response neatly on the UI (Currently the response is logged to the terminal)
+- Unit testing
+- Error handling
 ### Setup instructions
 - Option 1
     ```
