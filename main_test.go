@@ -49,7 +49,7 @@ func TestGetLinks(t *testing.T) {
 
 // Return nil if empty string is passed in link
 func TestGetHTMLVersionEmptyLink(t *testing.T) {
-	err := GetHTMLVersion("https://www.facebook.com/")
+	err := GetHTMLVersion("")
 	assert.Nil(t, err)
 }
 
@@ -57,4 +57,22 @@ func TestGetHTMLVersionEmptyLink(t *testing.T) {
 func TestGetHTMLVersion(t *testing.T) {
 	err := GetHTMLVersion("https://www.facebook.com/")
 	assert.Nil(t, err)
+}
+
+// Return nil if empty string is passed in link
+func TestLoginFormEmptyLink(t *testing.T) {
+	err := LoginForm("")
+	assert.Nil(t, err)
+}
+
+// Return nil if correct link is passed
+func TestLoginForm(t *testing.T) {
+	err := LoginForm("https://www.facebook.com/")
+	assert.Nil(t, err)
+}
+
+// Return error if incorrect link is passed
+func TestLoginFormIncorrectLink(t *testing.T) {
+	err := LoginForm("httdsaps://www.facebook.com/")
+	assert.NotNil(t, err)
 }
