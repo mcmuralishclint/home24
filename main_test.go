@@ -28,7 +28,7 @@ func TestGetHeadingEmptyLink(t *testing.T) {
 	assert.Equal(t, headings, make(map[string]int))
 }
 
-// // Return nil if correct link is passed
+// Return nil if correct link is passed
 func TestGetHeading(t *testing.T) {
 	headings, err := GetHeadings("https://www.facebook.com/")
 	assert.Nil(t, err)
@@ -41,8 +41,20 @@ func TestGetLinksEmptyLink(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-// // Return nil if correct link is passed
+// Return nil if correct link is passed
 func TestGetLinks(t *testing.T) {
 	err := GetLinks("https://www.facebook.com/")
+	assert.Nil(t, err)
+}
+
+// Return nil if empty string is passed in link
+func TestGetHTMLVersionEmptyLink(t *testing.T) {
+	err := GetHTMLVersion("https://www.facebook.com/")
+	assert.Nil(t, err)
+}
+
+// Return nil if correct link is passed
+func TestGetHTMLVersion(t *testing.T) {
+	err := GetHTMLVersion("https://www.facebook.com/")
 	assert.Nil(t, err)
 }
