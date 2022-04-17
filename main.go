@@ -117,7 +117,7 @@ func LoginForm(link string) error {
 	// authenticate
 	err := c.Post(link, map[string]string{"username": "admin", "password": "admin"})
 	if err != nil {
-		return nil
+		return err
 	}
 
 	// attach callbacks after login
