@@ -3,12 +3,11 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
-	"strings"
 
 	"github.com/gocolly/colly"
 	"github.com/gorilla/mux"
+	HTMLVersion "github.com/lestoni/html-version"
 )
 
 var tmpl *template.Template
@@ -31,6 +30,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	link := r.PostForm.Get("link")
 
+	getHTMLVersion(link)
 	getTitle(link)
 	getLinks(link)
 	getHeadings(link)
@@ -47,25 +47,27 @@ func getTitle(link string) {
 }
 
 func getLinks(link string) {
-	link_count := 0
-	accessible_link_count := 0
-	c := colly.NewCollector(
-		colly.MaxDepth(1),
-		colly.Async(true),
-	)
+	// link_count := 0
+	// accessible_link_count := 0
+	// // Instantiate default collector
+	// c := colly.NewCollector()
 
-	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
-		new_link := e.Attr("href")
-		link_count += 1
-		if strings.Contains(new_link, link) {
-			fmt.Println(link)
-			c.Visit(e.Request.AbsoluteURL(link))
-		}
-	})
+	// // On every a element which has href attribute call callback
+	// c.OnHTML("a[href]", func(e *colly.HTMLElement) {
+	// 	new_link := e.Attr("href")
+	// 	// Print link
+	// 	fmt.Printf("Link found: %q -> %s\n", e.Text, new_link)
+	// 	c.Visit(e.Request.AbsoluteURL(new_link))
+	// })
 
-	c.Visit(link)
+	// c.OnResponse(func(r *colly.Response) {
+	// 	link_count += 1
+	// 	fmt.Println(link_count)
+	// })
 
-	fmt.Printf("Number of links: %d, Number of accessible links: %d\n", link_count, accessible_link_count)
+	// c.Visit(link)
+
+	// fmt.Printf("Number of links: %d, Number of accessible links: %d\n", link_count, accessible_link_count)
 }
 
 func getHeadings(link string) {
@@ -109,7 +111,6 @@ func loginForm(link string) error {
 
 	// attach callbacks after login
 	c.OnResponse(func(r *colly.Response) {
-		log.Println("response received", r.StatusCode)
 		if r.StatusCode == 200 {
 			fmt.Println("Login form found")
 		}
@@ -118,4 +119,12 @@ func loginForm(link string) error {
 	// start scraping
 	c.Visit(link)
 	return nil
+}
+
+func getHTMLVersion(link string) {
+	version, err := HTMLVersion.DetectFromURL(link)
+	if err != nil {
+		fmt.Println("HTML Version not found")
+	}
+	fmt.Printf("HTML Version: %s\n", version)
 }
