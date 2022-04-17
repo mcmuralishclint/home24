@@ -8,14 +8,17 @@ import (
 
 // Return nil Title if empty string is passed in link
 func TestGetTitleEmptyLink(t *testing.T) {
-	err := GetTitle("")
+	title, err := GetTitle("")
 	assert.Nil(t, err)
+	assert.Equal(t, title, "")
 }
 
 // Return nil if correct link is passed
 func TestGetTitle(t *testing.T) {
-	err := GetTitle("https://www.facebook.com/")
+	title, err := GetTitle("https://www.facebook.com/")
 	assert.Nil(t, err)
+	assert.NotEqual(t, title, "")
+	assert.NotNil(t, title, "")
 }
 
 // Return nil Title if empty string is passed in link
